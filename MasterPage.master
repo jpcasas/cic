@@ -7,7 +7,7 @@
 
 <script runat="server">
 
-    Private opc As New ArrayList
+    
     
     
     
@@ -22,22 +22,12 @@
         Dim grupos As String
         grupos = Session("GRUPOUS")
         If grupos <> "" Then
-            opc = Biblioteca.GetOpciones(grupos).Items
+            If Session("menu") Is Nothing Then
+                Session("menu") = Biblioteca.GetOpciones(grupos).Items
+                
+            End If
         End If
-        
-        
-        
-       
     End Sub
-    
-    
-    
-        
-   
-
-    
-   
-
     </script>
 
 
@@ -142,6 +132,8 @@
                 <ul class="nav" id="main-menu">
                 <%
                    
+                    Dim opc As ArrayList
+                    opc = Session("menu")
                     
                     For i As Integer = 0 To opc.Count - 1
                         Dim val As MenuOption = opc(i)
