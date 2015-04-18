@@ -1,165 +1,62 @@
-﻿
-<%@ Page Language="VB" MasterPageFile="~/MasterPage.master" Title="Login" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Login.aspx.vb" Inherits="newlogin" %>
 
-<%@ Import Namespace="System.Windows.Forms" %>
-<%@ Import Namespace="System.Web" %>
-<%@ Import Namespace="System.Web.UI" %>
-<%@ Import Namespace="System.Drawing" %>
-<%@ import Namespace="System.Data" %>
-<%@ import Namespace="System.Data.SqlClient" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<script runat="server">
-
-    Protected Sub ACEPTAR_Click(ByVal sender As Object, ByVal e As System.EventArgs)
-        Dim BIBLIOTECA As New Biblioteca
-        Dim Seguridad As New Seguridad
-        Dim conn As SqlConnection
-        Dim dTReader As SqlDataReader
-        Dim Mensaje As String
-        Dim usr As String
-        Mensaje = ""
-        conn = BIBLIOTECA.Conectar(Mensaje)
-        Me.txtnombre.Text = UCase(Me.txtnombre.Text)
-        usr = UCase(Me.txtnombre.Text)
-        dTReader = BIBLIOTECA.CargarDataReader(Mensaje, "SELECT CODIGO,GRUPO FROM USUARIOS WHERE CODIGO='ADMIN'", conn)
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CES / CIC</title>
+    <link href="assets_login/css/bootstrap.css" rel="stylesheet">
+    <!--external css-->
+    <link href="assets_login/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
-        Page.FindControl("txtnombre1")
-        If Not dTReader.Read() Then
-            'MsgBox("Verifique nombre y contraseña", MsgBoxStyle.Information, "C.E.S.")
-            Me.mensaje.ForeColor = Color.Red
-            Me.mensaje.Text = "Verifique nombre y contraseña"
-            If Me.txtnombre.Text <> "" And Me.txtcontrasena.Text <> "" Then
-                Seguridad.RegistroAuditoria(Me.txtnombre.Text, "Inicio Sesion", "Clave y Contraseña", "Error de Clave y Contraseña", "")
-            End If
-        Else
-            Session("Usuario") = Me.txtnombre.Text
-            Session("GRUPOUS") = dTReader(1)
-            Session("Contrasena") = Seguridad.Encriptar(Me.txtcontrasena.Text)
-            Seguridad.RegistroAuditoria(Me.txtnombre.Text, "Inicio Sesion", "Clave y Contraseña", "Ingreso Exitoso", dTReader(1))
-        End If
-        dTReader.Close()
-        BIBLIOTECA.DesConectar(conn)
-        If Session("Usuario") <> "" Then
-            Response.Redirect("Principal.aspx")
-        End If
-    End Sub
-    
-    Public Sub limpiar()
-        Me.txtcontrasena.Text = ""
-        Me.txtnombre.Text = ""
-    End Sub
+    <!-- Custom styles for this template -->
+    <link href="assets_login/css/style.css" rel="stylesheet">
+    <link href="assets_login/css/style-responsive.css" rel="stylesheet">
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs)
-        Session("Usuario") = ""
-        Session("GRUPOUS") = ""
-        Me.mensaje.Text=""
-        Me.txtnombre.Focus()
-    End Sub
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
 
-    '    Protected Sub txtnombre_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs)
-    '        Me.txtnombre.Text = UCase(Me.txtnombre.Text)
-    '        Me.txtcontrasena.Focus()
-    '    End Sub
-</script>    
-<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-<script language="javascript" type="text/javascript">
-<!--
-function ponerMayusculas(nombre) 
-{ 
-    nombre.value=nombre.value.toUpperCase(); 
-    document.getElementById('ctl00_ContentPlaceHolder1_txtnombre').value= nombre.value;        
-} 
+<body>
+  
+   <div id="login-page">
+	  	<div class="container">
+	  	
+		        <form id="form1" runat="server" class="form-login" >
+		        <h2 class="form-login-heading">Ingreso CIC</h2>
+		        <div class="login-wrap">
+		            <asp:TextBox ID="txtnombre" runat="server" AutoPostBack="false" CssClass="form-control" placeholder="User Id" autofocus></asp:TextBox>
+		            <br/>
+		            <asp:TextBox ID="txtcontrasena" runat="server" TextMode="Password" placeholder="Password" CssClass="form-control"></asp:TextBox></td>
+		            
+		            <br />
+		            <asp:Label ID="mensaje" runat="server"></asp:Label>
+		            <br />
+		              <asp:Button ID="ACEPTAR" runat="server" Text="Ingresar" OnClick="ACEPTAR_Click" CssClass="btn btn-theme btn-block" />
+		            <hr>
+		        </div>
+		
+		
+		      </form>
+	  	
+	  	</div>
+	  </div>
 
-// -->
-</script>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="assets_login/js/jquery.js"></script>
+    <script src="assets_login/js/bootstrap.min.js"></script>
+
+    <!--BACKSTRETCH-->
+    <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+    <script type="text/javascript" src="assets_login/js/jquery.backstretch.min.js"></script>
+    <script>
+        $.backstretch("assets_login/img/paipaiv.jpg", {speed: 500});
+    </script>
     
-    <div>
-        <table>
-            <tr>
-                <td style="width: 100px">
-                </td>
-                <td style="width: 61px">
-                </td>
-                <td align="right" style="width: 100px">
-                </td>
-                <td style="width: 166px">
-                </td>
-                <td style="width: 166px">
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 100px; height: 21px">
-                </td>
-                <td style="width: 61px; height: 21px">
-                </td>
-                <td align="right" style="width: 100px; height: 21px">
-                </td>
-                <td style="width: 166px; height: 21px">
-                </td>
-                <td style="width: 166px; height: 21px">
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 100px; height: 21px">
-                </td>
-                <td style="width: 61px; height: 21px">
-                </td>
-                <td align="right" style="width: 100px; height: 21px">
-                </td>
-                <td style="width: 166px; height: 21px">
-                </td>
-                <td style="width: 166px; height: 21px">
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 100px">
-                </td>
-                <td style="width: 61px">
-                </td>
-                <td align="right" style="width: 100px">
-                    <asp:Label ID="Label1" runat="server" Text="Nombre Usuario" Width="143px" Font-Bold="True" ForeColor="#336677"></asp:Label></td>
-                <td style="width: 166px">
-                    <asp:TextBox ID="txtnombre" runat="server" AutoPostBack="false" TabIndex="1" ToolTip="Nombre de Usuario" Width="144px"></asp:TextBox></td>
-                <td style="width: 166px">
-                    </td>
-            </tr>
-            <tr>
-                <td style="width: 100px; height: 26px">
-                </td>
-                <td style="width: 61px; height: 26px">
-                </td>
-                <td align="right" style="width: 100px; height: 26px">
-                    <asp:Label ID="Label2" runat="server" Text="Contraseña" Width="116px" Font-Bold="True" ForeColor="#336677"></asp:Label></td>
-                <td style="width: 166px; height: 26px">
-                    <asp:TextBox ID="txtcontrasena" runat="server" TextMode="Password" TabIndex="2"></asp:TextBox></td>
-                <td style="width: 166px; height: 26px">
-                    </td>
-            </tr>
-            <tr>
-                <td style="width: 100px; height: 26px;">
-                </td>
-                <td style="width: 61px; height: 26px;">
-                </td>
-                <td align="right" style="width: 100px; height: 26px;">
-                    </td>
-                <td align="center" colspan="1" style="height: 26px">
-                    <asp:Button ID="ACEPTAR" runat="server" Text="ACEPTAR" OnClick="ACEPTAR_Click" TabIndex="3" Font-Bold="True" ForeColor="#336677" /></td>
-                <td colspan="2" align="center" style="height: 26px">
-                    <asp:Label ID="mensaje" runat="server"></asp:Label>&nbsp;</td>
-            </tr>
-            <tr>
-                <td style="width: 100px">
-                </td>
-                <td style="width: 61px">
-                </td>
-                <td align="right" style="width: 100px">
-                </td>
-                <td style="width: 166px">
-                </td>
-                <td style="width: 166px">
-                    </td>
-            </tr>
-        </table>
-    
-    </div>   
-</asp:Content>
+</body>
+</html>

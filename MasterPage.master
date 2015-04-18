@@ -7,203 +7,200 @@
 
 <script runat="server">
 
+    Private opciones As New MenuOption()
+    
+    
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs)
     Dim Biblioteca As New Biblioteca
-    
+        
+        
         If Session("GRUPOUS") = "USUARIO" And Session("TOMAMUESTRAS") = "" Then
             Biblioteca.AbreVentana("CapturarTomaMuestras.aspx", Page, "height=200,width=375,location=1")
         End If
         
-        If Not Page.IsPostBack Then
-            'Traemos los datos de de datos.
-            Dim dtMenuItems As New DataTable
-            Dim dtMenuItemsV As New DataTable            
-            Dim daMenu As SqlDataAdapter
-            Dim ssql As String
-            Dim Mensaje As String
-            'Conexion a la base de datos donde esta nuestra tabla Menú.
-            Dim conn As SqlConnection
-            
-            Mensaje = ""
-            conn = Biblioteca.Conectar(Mensaje)
-            Me.mensaje.ForeColor = Color.Red
-            Me.mensaje.Text = Mensaje
-            'se LA CONSULTA
-            ssql = "SELECT OPCIONESDEMENU.*" & _
-                   " FROM PERMISOSMENU INNER JOIN OPCIONESDEMENU ON PERMISOSMENU.CODIGO = OPCIONESDEMENU.Codigo" & _
-                   " WHERE OPCIONESDEMENU.VERTICAL =0 AND PERMISOSMENU.GRUPO='" & Session("GRUPOUS") & "' AND PERMISOSMENU.VER<>0"
-            daMenu = Biblioteca.CargarDataAdapter(ssql, conn)
-            daMenu.SelectCommand.CommandType = CommandType.Text
-            'llenamos el datatable
-            daMenu.Fill(dtMenuItems)
-            'recorremos el datatable para agregar los elementos de que estaran en la cabecera del menú.
-            'solo menus horizontales
-            For Each drMenuItem As Data.DataRow In dtMenuItems.Rows
-                'esta condicion indica q son elementos padre.
-                If drMenuItem("CODIGO").Equals(drMenuItem("PADRE")) Then
-                    Dim mnuMenuItem As New MenuItem
-                    mnuMenuItem.Value = drMenuItem("CODIGO").ToString
-                    mnuMenuItem.Text = drMenuItem("DESCRIPCION").ToString
-                    'mnuMenuItem.ImageUrl = drMenuItem("Icono").ToString
-                    mnuMenuItem.NavigateUrl = drMenuItem("URL").ToString
-                    'agregamos el Ítem al menú
-                    mnuPrincipal.Items.Add(mnuMenuItem)
-                    'hacemos un llamado al metodo recursivo encargado de generar el árbol del menú.
-                    AddMenuItem(mnuMenuItem, dtMenuItems)
-                End If
-            Next
-            
-            'menus verticales
-            ssql = "SELECT OPCIONESDEMENU.*" & _
-                   " FROM PERMISOSMENU INNER JOIN OPCIONESDEMENU ON PERMISOSMENU.CODIGO = OPCIONESDEMENU.Codigo" & _
-                   " WHERE OPCIONESDEMENU.VERTICAL <>0 AND PERMISOSMENU.GRUPO='" & Session("GRUPOUS") & "' AND PERMISOSMENU.VER<>0"
-            daMenu = Biblioteca.CargarDataAdapter(ssql, conn)
-            daMenu.SelectCommand.CommandType = CommandType.Text
-            'llenamos el datatable
-            daMenu.Fill(dtMenuItemsV)
-            'recorremos el datatable para agregar los elementos de que estaran en la cabecera del menú.
-            'solo menus horizontales
-            For Each drMenuItem As Data.DataRow In dtMenuItemsV.Rows
-                'esta condicion indica q son elementos padre.
-                If drMenuItem("CODIGO").Equals(drMenuItem("PADRE")) Then
-                    Dim mnuMenuItem As New MenuItem
-                    mnuMenuItem.Value = drMenuItem("CODIGO").ToString
-                    mnuMenuItem.Text = drMenuItem("DESCRIPCION").ToString
-                    'mnuMenuItem.ImageUrl = drMenuItem("Icono").ToString
-                    mnuMenuItem.NavigateUrl = drMenuItem("URL").ToString
-                    'agregamos el Ítem al menú
-                    MENUPROD.Items.Add(mnuMenuItem)
-                    'hacemos un llamado al metodo recursivo encargado de generar el árbol del menú.
-                    AddMenuItem(mnuMenuItem, dtMenuItemsV)
-                End If
-            Next
-
-            Biblioteca.DesConectar(conn)
-        End If
+       
     End Sub
     
-    Private Sub AddMenuItem(ByRef mnuMenuItem As MenuItem, ByVal dtMenuItems As Data.DataTable)
-        'recorremos cada elemento del datatable para poder determinar cuales son elementos hijos
-        'del menuitem dado pasado como parametro ByRef.
-        For Each drMenuItem As Data.DataRow In dtMenuItems.Rows
-            If drMenuItem("padre").ToString.Equals(mnuMenuItem.Value) AndAlso _
-            Not drMenuItem("codigo").Equals(drMenuItem("padre")) Then
-                Dim mnuNewMenuItem As New MenuItem
-                mnuNewMenuItem.Value = drMenuItem("codigo").ToString
-                mnuNewMenuItem.Text = drMenuItem("descripcion").ToString
-                'mnuNewMenuItem.ImageUrl = drMenuItem("Icono").ToString
-                mnuNewMenuItem.NavigateUrl = drMenuItem("Url").ToString
-                'Agregamos el Nuevo MenuItem al MenuItem que viene de un nivel superior.
-                mnuMenuItem.ChildItems.Add(mnuNewMenuItem)
-                'llamada recursiva para ver si el nuevo menú ítem aun tiene elementos hijos.
-                AddMenuItem(mnuNewMenuItem, dtMenuItems)
-            End If
-        Next
-    End Sub
+    
+    
+        
+   
 
-    Protected Sub mnuPrincipal_MenuItemClick(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.MenuEventArgs)
-        'MsgBox(e.Item.Value)
-    End Sub
-
-    Protected Sub MENUPROD_MenuItemClick(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.MenuEventArgs)
-        'MsgBox(e.Item.Value)
-    End Sub
+    
+   
 
     </script>
 
-<script language="JavaScript"> 
 
-</script>
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
     <title>Control Ingreso Carbón CIC </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <link href="assets/css/custom-styles.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    
 </head>
 
-<body topmargin="0" leftmargin="0" bottommargin="0">
-    <form id="form1" runat="server">
-    <div>       
-        <table border="0" height="100%"  bordercolor=red width="100%">
-        <tr>
-            <td rowspan="8" height="100%"  bgcolor="#666666" style="width: 20%">
-		<!--col1 -->
-                &nbsp;</td>        
-            
-            <td colspan="2" style="height: 66px" >
-                &nbsp;<asp:Image ID="Image2" runat="server" ImageUrl="~/imagenes/intranet1.bmp" Height="33px" Width="1016px" />		
-                <br />
-                <asp:Label ID="Label1" runat="server" Font-Overline="False" Font-Size="X-Small" Font-Underline="False"
-                    ForeColor="#336677"></asp:Label></td>
-            <td rowspan="8" height="100%" width="20%" bgcolor="#666666">
-		<!--col2 -->
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" height="35" valign="bottom" id="MenuPrn">
-            <!--menu horizontal -->
-                <asp:Menu ID="mnuPrincipal" MaximumDynamicDisplayLevels ="2" Runat="server" Height="35px" Orientation="Horizontal" ForeColor="White" Font-Names="Arial" Font-Size="Medium" StaticSubMenuIndent="" DynamicHorizontalOffset="2" Font-Bold = "True" BorderStyle="None" BackColor="#336677" Font-Overline="False" Font-Underline="False" OnMenuItemClick="mnuPrincipal_MenuItemClick" Width="1024px">
-<StaticMenuStyle BorderColor="Black" BorderWidth="1px"></StaticMenuStyle>
+<body >
+ <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="Principal.aspx"><b>CES-</b>CIC</a>
+            </div>
 
-<StaticSelectedStyle BorderStyle="None"></StaticSelectedStyle>
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+                        
+                        
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>No hay mensajes</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        
+                        
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>No hay tareas pendientes</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                        
+                        
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>No hay Alertas</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        
+                        
+                        <li><a href="#"><i class="fa fa-sign-out fa-fw"></i>Cerrar sesion</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+        </nav>
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                <%
+                   
+                    Dim grupos As String
+                    grupos = Session("GRUPOUS")
+                    Dim opc As ArrayList
+                    opc = Biblioteca.GetOpciones(grupos).Items
+                    For i As Integer = 0 To opc.Count - 1
+                        Dim val As MenuOption = opc(i)
+                        If val.Descripcion.Trim() <> "" Then
+                            Response.Write("<li><a href='" & val.Url & "'> <i class='fa fa-sitemap'></i>" & val.Descripcion & "</a>")
+                            If val.Items.Count > 0 Then
+                                Response.Write("<ul class='nav nav-second-level'>")
+                                For j As Integer = 0 To val.Items.Count - 1
+                                    Response.Write("<li><a href='" & val.Items(j).Url & "'> <i class='fa fa-fw fa-file'></i>" & val.Items(j).Descripcion & "</a>")
+                                Next
+                                Response.Write("</ul>")
+                            End If
+                            
+                        End If
+                        
+                        
 
-<StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" Width="180px"></StaticMenuItemStyle>
+                    Next
+                  
+                 %>
+                 
+                </ul>
 
-<DynamicHoverStyle BorderColor="White" BorderWidth="1px" BorderStyle="None" Font-Bold="True"></DynamicHoverStyle>
+            </div>
 
-<DynamicMenuStyle BackColor="#336677" BorderColor="Black" BorderWidth="1px" Width="300px"></DynamicMenuStyle>
-
-<DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" BackColor="#336677" BorderWidth="0px"></DynamicMenuItemStyle>
-
-<StaticHoverStyle Font-Bold="True" Font-Overline="False" ForeColor="White"></StaticHoverStyle>
-</asp:Menu>
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+			 <div class="row">
+                    <div class="col-md-12">
+                       <form id="form1" runat="server">
+                <asp:Label ID="Label1" runat="server" Visible="false"></asp:Label>
+                <h1 class="page-header">
+                            <% Response.Write(Label1.Text)%>
+                        </h1>
                 <asp:Label ID="mensaje" runat="server"></asp:Label>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" height="2" bgcolor="#336677" >
-		<!--line1-->
-            </td>
-        </tr>
-        <tr>
-            <td height="1" width="15%" valign="top">
-		<!--menu2-->
-                <asp:Menu ID="MENUPROD" MaximumDynamicDisplayLevels ="2" Runat="server" Height="35px" ForeColor="#336677" Font-Names="Arial" Font-Size="Medium" StaticSubMenuIndent="" DynamicHorizontalOffset="2" Font-Bold = "True" BorderStyle="None" Font-Overline="False" Font-Underline="False" OnMenuItemClick="MENUPROD_MenuItemClick">
-            <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="0px" Width="120px" BorderColor="#336677" BorderWidth="1px"/>
-            <DynamicHoverStyle Font-Bold="True" BorderWidth="1px" BorderColor="#336677"/>
-            <DynamicMenuStyle Width="300px" BorderWidth="0px"/>
-            <StaticSelectedStyle BorderStyle="None" />
-            <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" BorderWidth="1px" ForeColor="#336677" BorderColor="#336677" />
-            <StaticHoverStyle ForeColor="#336677" Font-Bold="True" Font-Overline="False"/>
-                    <DynamicSelectedStyle ForeColor="#336677" />
-           </asp:Menu>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-           </td>
-            <td rowspan="3" id="panel" valign="top">
-            <br/><br/>
+	
+	
 		        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" Visible=true>
                     
                 </asp:ContentPlaceHolder>
-            </td>            
-        </tr>
-                <tr>
-            <td rowspan="2" >		    
-            </td>
-        </tr>
-        <tr>
-        </tr>
-        <tr>
-            <td colspan="2" height="2" bgcolor="#336677">
-		<!--line2-->
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="height: 50%">
-		<!--image2-->
-            </td>
-        </tr>
-    </table>
-    </div>
-    </form> 
+               </form> 
+                    </div>
+                </div> 
+                 <!-- /. ROW  -->
+				 <footer><p></p></footer>
+				</div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+      <!-- Bootstrap Js -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="assets/js/jquery.metisMenu.js"></script>
+      <!-- Custom Js -->
+    <script src="assets/js/custom-scripts.js"></script>
+
+
+   
      
 </body>
 </html>

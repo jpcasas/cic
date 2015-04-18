@@ -97,7 +97,7 @@
                 </ajaxToolkit:AutoCompleteExtender>                    
      
     <div>
-        &nbsp;&nbsp;&nbsp;
+     
         
         <asp:ObjectDataSource ID="ObjectDataSource1" runat="server" DeleteMethod="Delete"
             InsertMethod="Insert" OldValuesParameterFormatString="original_{0}" SelectMethod="GetData"
@@ -141,13 +141,13 @@
                 <asp:Parameter Name="cedula" Type="String" />
             </InsertParameters>
         </asp:ObjectDataSource>
-        &nbsp;&nbsp;
+       
         <table>
             <tr>
-                <td align="right" style="width: 167px; height: 6px;">
+                <td>
                     <asp:Button ID="ImportarExcel" runat="server" Font-Bold="True" ForeColor="#336677"
                         OnClick="ImportarExcel_Click" Text="Importar" ToolTip="Importar Datos desde Archivo Csv"
-                        Width="114px" />
+                        />
                 </td>
                 <td colspan="2" height="1">
                     &nbsp;<asp:Label ID="Label6" runat="server" Font-Bold="True" Text="Buscar Vehiculo" ForeColor="#336677"></asp:Label>
@@ -156,7 +156,7 @@
            
             
             <tr>
-                <td style="width: 123px; height: 21px; text-align: center;" align="left">
+                <td >
                 <br />
                 <asp:Panel ID="Panel1" runat="server">
                     <asp:DetailsView ID="DetailsView1" runat="server" BorderStyle="None" BorderWidth="0px"
@@ -169,27 +169,20 @@
                     
                     </asp:Panel>
                     </td>
-                <td style="width: 139px; height: 21px; text-align: center;" align="left">
+                <td >
                     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="conductor,placas,cedula"
-                        DataSourceID="ObjectDataSource2" AllowSorting="True" ForeColor="#333333" GridLines="None">
-                        <RowStyle ForeColor="#333333" BackColor="#F7F6F3" />
+                        DataSourceID="ObjectDataSource2" AllowSorting="True" GridLines="None">
+                        <RowStyle />
                         <Columns>
                             <asp:CommandField ShowDeleteButton="True" />
                             <asp:BoundField DataField="placas" HeaderText="Placa" ReadOnly="True" SortExpression="placas" />
                             <asp:BoundField DataField="conductor" HeaderText="Conductor" ReadOnly="True" SortExpression="conductor" />
                             <asp:BoundField DataField="cedula" HeaderText="Cedula" ReadOnly="True" SortExpression="cedula" />
                         </Columns>
-                        <FooterStyle BackColor="#5D7B9D" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#999999" />
-                        <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                       
                     </asp:GridView>
                     </td>
-                <td align="left" style="width: 100px; height: 21px">
-                    &nbsp;
-                </td>
+                
             </tr>
             
             <tr>

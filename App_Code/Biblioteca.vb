@@ -5,7 +5,80 @@ Imports System.IO
 Imports System.Math
 
 Public Class Biblioteca
-    Public Function Conectar(ByRef Mensaje As String) As SqlConnection
+
+    Shared root As MenuOption
+
+
+    Public Shared Function GetOpciones(ByRef grupos As String) As MenuOption
+        If root Is Nothing Then
+            root = New MenuOption()
+
+            'Traemos los datos de de datos.
+            Dim dtMenuItems As New DataTable
+            Dim dtMenuItemsV As New DataTable
+            Dim daMenu As SqlDataAdapter
+            Dim ssql As String
+            Dim Mensaje As String
+            'Conexion a la base de datos donde esta nuestra tabla Menú.
+            Dim conn As SqlConnection
+
+            Mensaje = ""
+            conn = Conectar(Mensaje)
+
+            'se LA CONSULTA
+            ssql = "SELECT OPCIONESDEMENU.*" & _
+                   " FROM PERMISOSMENU INNER JOIN OPCIONESDEMENU ON PERMISOSMENU.CODIGO = OPCIONESDEMENU.Codigo" & _
+                   " WHERE PERMISOSMENU.GRUPO='" & grupos & "' AND PERMISOSMENU.VER<>0"
+            daMenu = CargarDataAdapter(ssql, conn)
+            daMenu.SelectCommand.CommandType = CommandType.Text
+            'llenamos el datatable
+            daMenu.Fill(dtMenuItems)
+            'recorremos el datatable para agregar los elementos de que estaran en la cabecera del menú.
+            'solo menus horizontales
+            For Each drMenuItem As Data.DataRow In dtMenuItems.Rows
+                'esta condicion indica q son elementos padre.
+                If drMenuItem("CODIGO").Equals(drMenuItem("PADRE")) Then
+                    Dim menuOption As New MenuOption
+
+                    menuOption.Codigo = drMenuItem("CODIGO").ToString
+
+                    menuOption.Descripcion = drMenuItem("DESCRIPCION").ToString
+
+                    'mnuMenuItem.ImageUrl = drMenuItem("Icono").ToString
+                    menuOption.Url = drMenuItem("URL").ToString
+
+                    'agregamos el Ítem al menú
+                    root.Items.Add(menuOption)
+                    'hacemos un llamado al metodo recursivo encargado de generar el árbol del menú.
+                    AddMenuItem(menuOption, dtMenuItems)
+                End If
+            Next
+
+            DesConectar(conn)
+
+        End If
+
+        Return root
+    End Function
+    Private Shared Function AddMenuItem(ByRef mnuMenuItem As MenuOption, ByVal dtMenuItems As Data.DataTable)
+        For Each drMenuItem As Data.DataRow In dtMenuItems.Rows
+            If drMenuItem("padre").ToString.Equals(mnuMenuItem.Codigo) AndAlso _
+            Not drMenuItem("codigo").Equals(drMenuItem("padre")) Then
+                Dim mnuNewMenuItem As New MenuOption
+                mnuNewMenuItem.Codigo = drMenuItem("codigo").ToString
+                mnuNewMenuItem.Descripcion = drMenuItem("descripcion").ToString
+                'mnuNewMenuItem.ImageUrl = drMenuItem("Icono").ToString
+                mnuNewMenuItem.Url = drMenuItem("Url").ToString
+                'Agregamos el Nuevo MenuItem al MenuItem que viene de un nivel superior.
+                mnuMenuItem.Items.Add(mnuNewMenuItem)
+                'llamada recursiva para ver si el nuevo menú ítem aun tiene elementos hijos.
+                AddMenuItem(mnuNewMenuItem, dtMenuItems)
+            End If
+        Next
+    End Function
+
+
+    Public Shared Function Conectar(ByRef Mensaje As String) As SqlConnection
         Dim Planos As New ArchivosPlanos
         Try
             Dim Conn = New SqlConnection
@@ -20,7 +93,7 @@ Public Class Biblioteca
         End Try
     End Function
 
-    Public Function DesConectar(ByVal conn As SqlConnection) As Boolean
+    Public Shared Function DesConectar(ByVal conn As SqlConnection) As Boolean
         Try
             conn.Close()
             Return True
@@ -56,7 +129,7 @@ Public Class Biblioteca
         End Try
     End Function
 
-    Public Function CargarDataAdapter(ByVal CadenaSql As String, ByVal conn As SqlConnection) As SqlDataAdapter
+    Public Shared Function CargarDataAdapter(ByVal CadenaSql As String, ByVal conn As SqlConnection) As SqlDataAdapter
         Try
             CargarDataAdapter = New SqlDataAdapter(CadenaSql, conn)
         Catch ex As Exception

@@ -571,7 +571,7 @@ function Button1_onclick() {
                 </td>
                 <td style="height: 26px" align="right">
                     &nbsp;
-                    &nbsp;<asp:Button ID="Btn_NoQuitar" runat="server" Text="R" Height="0px" Width="0px" />
+                    &nbsp;<asp:Button ID="Btn_NoQuitar" runat="server" Text="R" Height="0px" Width="0px" Visible="false"/>
                     &nbsp;
                      <!--<OBJECT classid="clsid:65AD5FCC-C2F4-4B9B-B8B8-C084B148B3EC"> -->
                 </td>
