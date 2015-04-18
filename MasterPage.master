@@ -7,7 +7,8 @@
 
 <script runat="server">
 
-    Private opciones As New MenuOption()
+    Private opc As New ArrayList
+    
     
     
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs)
@@ -17,6 +18,14 @@
         If Session("GRUPOUS") = "USUARIO" And Session("TOMAMUESTRAS") = "" Then
             Biblioteca.AbreVentana("CapturarTomaMuestras.aspx", Page, "height=200,width=375,location=1")
         End If
+        
+        Dim grupos As String
+        grupos = Session("GRUPOUS")
+        If grupos <> "" Then
+            opc = Biblioteca.GetOpciones(grupos).Items
+        End If
+        
+        
         
        
     End Sub
@@ -133,10 +142,7 @@
                 <ul class="nav" id="main-menu">
                 <%
                    
-                    Dim grupos As String
-                    grupos = Session("GRUPOUS")
-                    Dim opc As ArrayList
-                    opc = Biblioteca.GetOpciones(grupos).Items
+                    
                     For i As Integer = 0 To opc.Count - 1
                         Dim val As MenuOption = opc(i)
                         If val.Descripcion.Trim() <> "" Then

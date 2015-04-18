@@ -6,10 +6,10 @@ Imports System.Math
 
 Public Class Biblioteca
 
-    Shared root As MenuOption
+    Private root As MenuOption
 
 
-    Public Shared Function GetOpciones(ByRef grupos As String) As MenuOption
+    Public Function GetOpciones(ByRef grupos As String) As MenuOption
         If root Is Nothing Then
             root = New MenuOption()
 
@@ -60,7 +60,7 @@ Public Class Biblioteca
 
         Return root
     End Function
-    Private Shared Function AddMenuItem(ByRef mnuMenuItem As MenuOption, ByVal dtMenuItems As Data.DataTable)
+    Private Function AddMenuItem(ByRef mnuMenuItem As MenuOption, ByVal dtMenuItems As Data.DataTable)
         For Each drMenuItem As Data.DataRow In dtMenuItems.Rows
             If drMenuItem("padre").ToString.Equals(mnuMenuItem.Codigo) AndAlso _
             Not drMenuItem("codigo").Equals(drMenuItem("padre")) Then
@@ -78,7 +78,7 @@ Public Class Biblioteca
     End Function
 
 
-    Public Shared Function Conectar(ByRef Mensaje As String) As SqlConnection
+    Public Function Conectar(ByRef Mensaje As String) As SqlConnection
         Dim Planos As New ArchivosPlanos
         Try
             Dim Conn = New SqlConnection
@@ -93,7 +93,7 @@ Public Class Biblioteca
         End Try
     End Function
 
-    Public Shared Function DesConectar(ByVal conn As SqlConnection) As Boolean
+    Public Function DesConectar(ByVal conn As SqlConnection) As Boolean
         Try
             conn.Close()
             Return True
@@ -129,7 +129,7 @@ Public Class Biblioteca
         End Try
     End Function
 
-    Public Shared Function CargarDataAdapter(ByVal CadenaSql As String, ByVal conn As SqlConnection) As SqlDataAdapter
+    Public Function CargarDataAdapter(ByVal CadenaSql As String, ByVal conn As SqlConnection) As SqlDataAdapter
         Try
             CargarDataAdapter = New SqlDataAdapter(CadenaSql, conn)
         Catch ex As Exception
