@@ -1,0 +1,25 @@
+Seguridad.RegistroAuditoria(Session("Usuario"), "Reportes", "Muestras Especiales", "Fecha:" & Me.FECHAIN.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Actualizar", "Camiones Restringidos", "Placa:" & Me.MATRICULA.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Insertar", "Camiones Restringidos", "Placa:" & Me.MATRICULA.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Reportes", "CarbonVsCalor", "FechaIn:" & Me.FECHAIN.Text & ";FechaFin:" & Me.FECHAFIN.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Cierre De Periodo", "Inicio", "Fecha Cierre:" & Me.FECHAIN.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Cierre De Periodo", "Fin No Exitoso", "Fecha Cierre:" & Me.FECHAIN.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Actualizar", "Cooperativas", "Numero:" & Me.NUMERO.Text & ";Cupo Limite:" & Me.CUPOLIMITE.Text & ";Entregas:" & Me.ENTREGAS.Text & ";kg Acumulados:" & Me.KGS_ACUM.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Insertar", "EntregasBascula", "Numero:" & Me.PROVEEDOR.Text & "/" & Me.NUMEROENTREGA.Text & ";Peso:" & Me.PesoT.Text & ";Muestra:" & Me.NUMEROMUESTRA.Text & ";AcumCoop:" & Me.AcumCoop.Text & ";AcumMuestra:" & Me.AcumMuestra.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), Session("ParamBD"), "EntregasManuales", "Numero:" & Me.NUMEROENTRADA.Text & ";PesoEntrada:" & Me.PESOENTRADA.Text & ";PesoSalida:" & Me.PESOSALIDA.Text & ";PesoNeto:" & Me.PESONETO.Text & ";Muestra:" & Me.MUESTRAGEN.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Exportar", "Diario", "FechaIn:" & Me.FECHAIN.Text & ";FechaFin:" & Me.FECHAFIN.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), Session("ParamBD"), "EntregasManualesAño", "Numero:" & Me.NUMEROENTRADA.Text & ";PesoEntrada:" & Me.PESOENTRADA.Text & ";PesoSalida:" & Me.PESOSALIDA.Text & ";PesoNeto:" & Me.PESONETO.Text & ";Muestra:" & Me.MUESTRAGEN.Text, Session("GRUPOUS"))
+
+Seguridad.RegistroAuditoria(Session("Usuario"), "Actualizar", "Parametros", "Nombre:" & TNombre.Text & ";Valor:" & TFormula.Text, Session("GRUPOUS"))
+
+IMPRESIONES

@@ -1,0 +1,23 @@
+Ejecutar C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727   aspnet_regiis -i
+
+
+fondo Titulo
+#aeb1ab
+
+Fondo Registro
+LightGray
+
+
+Solución al problema, como cambiar la configuración regional al usuario ASPNET o el usuario anónimo que corra la aplicación:
+
+1º Desde el registro ( Inicio --> Ejecutar --> Regedit )
+
+
+2º Buscar HKEY_USERS --> S-1-5-20 (Si es el usuario ASPNET) --> Control Panel --> International.
+
+3º Desde aquí se puede ver la configuración regional del usuario y cambiarla.
+
+4º Reiniciar IIS
+
+sDecimal
+sMonDecimalSep

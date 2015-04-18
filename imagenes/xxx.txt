@@ -1,0 +1,8 @@
+Número de argumentos erróneo o asiganción de propiedad no válida
+
+http://www.taltech.com/products/spanish.htm
+
+
+
+System.Windows.Forms.Cursors
+
