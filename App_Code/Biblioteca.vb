@@ -10,53 +10,53 @@ Public Class Biblioteca
 
 
     Public Function GetOpciones(ByRef grupos As String) As MenuOption
-        If root Is Nothing Then
-            root = New MenuOption()
 
-            'Traemos los datos de de datos.
-            Dim dtMenuItems As New DataTable
-            Dim dtMenuItemsV As New DataTable
-            Dim daMenu As SqlDataAdapter
-            Dim ssql As String
-            Dim Mensaje As String
-            'Conexion a la base de datos donde esta nuestra tabla Menú.
-            Dim conn As SqlConnection
+        root = New MenuOption()
 
-            Mensaje = ""
-            conn = Conectar(Mensaje)
+        'Traemos los datos de de datos.
+        Dim dtMenuItems As New DataTable
+        Dim dtMenuItemsV As New DataTable
+        Dim daMenu As SqlDataAdapter
+        Dim ssql As String
+        Dim Mensaje As String
+        'Conexion a la base de datos donde esta nuestra tabla Menú.
+        Dim conn As SqlConnection
 
-            'se LA CONSULTA
-            ssql = "SELECT OPCIONESDEMENU.*" & _
-                   " FROM PERMISOSMENU INNER JOIN OPCIONESDEMENU ON PERMISOSMENU.CODIGO = OPCIONESDEMENU.Codigo" & _
-                   " WHERE PERMISOSMENU.GRUPO='" & grupos & "' AND PERMISOSMENU.VER<>0"
-            daMenu = CargarDataAdapter(ssql, conn)
-            daMenu.SelectCommand.CommandType = CommandType.Text
-            'llenamos el datatable
-            daMenu.Fill(dtMenuItems)
-            'recorremos el datatable para agregar los elementos de que estaran en la cabecera del menú.
-            'solo menus horizontales
-            For Each drMenuItem As Data.DataRow In dtMenuItems.Rows
-                'esta condicion indica q son elementos padre.
-                If drMenuItem("CODIGO").Equals(drMenuItem("PADRE")) Then
-                    Dim menuOption As New MenuOption
+        Mensaje = ""
+        conn = Conectar(Mensaje)
 
-                    menuOption.Codigo = drMenuItem("CODIGO").ToString
+        'se LA CONSULTA
+        ssql = "SELECT OPCIONESDEMENU.*" & _
+               " FROM PERMISOSMENU INNER JOIN OPCIONESDEMENU ON PERMISOSMENU.CODIGO = OPCIONESDEMENU.Codigo" & _
+               " WHERE PERMISOSMENU.GRUPO='" & grupos & "' AND PERMISOSMENU.VER<>0"
+        daMenu = CargarDataAdapter(ssql, conn)
+        daMenu.SelectCommand.CommandType = CommandType.Text
+        'llenamos el datatable
+        daMenu.Fill(dtMenuItems)
+        'recorremos el datatable para agregar los elementos de que estaran en la cabecera del menú.
+        'solo menus horizontales
+        For Each drMenuItem As Data.DataRow In dtMenuItems.Rows
+            'esta condicion indica q son elementos padre.
+            If drMenuItem("CODIGO").Equals(drMenuItem("PADRE")) Then
+                Dim menuOption As New MenuOption
 
-                    menuOption.Descripcion = drMenuItem("DESCRIPCION").ToString
+                menuOption.Codigo = drMenuItem("CODIGO").ToString
 
-                    'mnuMenuItem.ImageUrl = drMenuItem("Icono").ToString
-                    menuOption.Url = drMenuItem("URL").ToString
+                menuOption.Descripcion = drMenuItem("DESCRIPCION").ToString
 
-                    'agregamos el Ítem al menú
-                    root.Items.Add(menuOption)
-                    'hacemos un llamado al metodo recursivo encargado de generar el árbol del menú.
-                    AddMenuItem(menuOption, dtMenuItems)
-                End If
-            Next
+                'mnuMenuItem.ImageUrl = drMenuItem("Icono").ToString
+                menuOption.Url = drMenuItem("URL").ToString
 
-            DesConectar(conn)
+                'agregamos el Ítem al menú
+                root.Items.Add(menuOption)
+                'hacemos un llamado al metodo recursivo encargado de generar el árbol del menú.
+                AddMenuItem(menuOption, dtMenuItems)
+            End If
+        Next
 
-        End If
+        DesConectar(conn)
+
+
 
         Return root
     End Function
