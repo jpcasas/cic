@@ -118,7 +118,7 @@
                     <ul class="dropdown-menu dropdown-user">
                         
                         
-                        <li><a href="#"><i class="fa fa-sign-out fa-fw"></i>Cerrar sesion</a>
+                        <!--<li><a href="#"><i class="fa fa-sign-out fa-fw"></i>Cerrar sesion</a>-->
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
