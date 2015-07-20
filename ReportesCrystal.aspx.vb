@@ -80,7 +80,7 @@ Partial Class ReportesCrystal2
             Me.myCrystalReportViewer.DataBind()
             Me.myCrystalReportViewer.DisplayGroupTree = False
             If Session("NombreReporte") = "ReciboEntOficio.rpt" Then
-                reporte.PrintToPrinter(1, False, 0, 0)
+                'reporte.PrintToPrinter(1, False, 0, 0)
 
             End If
 
